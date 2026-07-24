@@ -1,7 +1,23 @@
+# <summary>
+# Build-system configuration for packaging this project.
+# </summary>
+#
+# <remarks>
+# Setuptools is used because the project is a small standard Python package
+# stored under the src/ layout.
+# </remarks>
 [build-system]
 requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
+# <summary>
+# Project metadata used by pip and setuptools.
+# </summary>
+#
+# <remarks>
+# The project has no runtime dependencies because all solver logic uses only
+# Python standard-library modules.
+# </remarks>
 [project]
 name = "seminar-sliding-puzzle"
 version = "0.1.0"
@@ -13,8 +29,24 @@ authors = [
 ]
 dependencies = []
 
+# <summary>
+# Console script installed by pip.
+# </summary>
+#
+# <remarks>
+# After running pip install -e ., the command sliding-puzzle calls
+# sliding_puzzle.cli.main.
+# </remarks>
 [project.scripts]
 sliding-puzzle = "sliding_puzzle.cli:main"
 
+# <summary>
+# Package discovery configuration.
+# </summary>
+#
+# <remarks>
+# The Python package lives inside src/sliding_puzzle, so setuptools should scan
+# the src directory for importable packages.
+# </remarks>
 [tool.setuptools.packages.find]
 where = ["src"]

@@ -1,3 +1,14 @@
+"""<summary>
+Command-line interface for the sliding puzzle solver.
+</summary>
+
+<remarks>
+This module owns the assignment's default start and target states, parses user
+arguments, runs the selected search algorithms, and prints the comparison table
+required by the project.
+</remarks>
+"""
+
 from __future__ import annotations
 
 import argparse
@@ -8,9 +19,24 @@ from sliding_puzzle.heuristics import manhattan_distance, misplaced_tiles, zero_
 from sliding_puzzle.search import SearchResult, astar_search, breadth_first_search
 
 
+# <summary>
+# Start state specified by the assignment PDF.
+# </summary>
 ASSIGNMENT_START = (8, 7, 6, 5, 4, 3, 2, 1, 0)
+
+# <summary>
+# Target state specified by the assignment PDF.
+# </summary>
 ASSIGNMENT_TARGET = (0, 1, 2, 3, 4, 5, 6, 7, 8)
 
+# <summary>
+# Mapping from CLI heuristic name to the function and label used by A*.
+# </summary>
+#
+# <remarks>
+# The first tuple item is the callable heuristic. The second tuple item is the
+# readable name displayed in the results table.
+# </remarks>
 HEURISTICS = {
     "manhattan": (manhattan_distance, "Manhattan distance"),
     "misplaced": (misplaced_tiles, "Misplaced tiles"),
@@ -19,6 +45,27 @@ HEURISTICS = {
 
 
 def main(argv: Sequence[str] | None = None) -> int:
+    """<summary>
+    Run the command-line solver workflow.
+    </summary>
+
+    <param name="argv">
+    Optional command-line argument sequence. When <c>None</c>, arguments are
+    read from the real process command line by <c>argparse</c>.
+    </param>
+
+    <returns>
+    Process-style exit code: <c>0</c> when all selected algorithms find a
+    solution, <c>1</c> when a selected algorithm fails to find a solution, or
+    <c>2</c> when the input puzzle is detected as unsolvable before searching.
+    </returns>
+
+    <remarks>
+    The function is used by <c>main.py</c>, <c>python -m sliding_puzzle</c>, and
+    the installed <c>sliding-puzzle</c> console script.
+    </remarks>
+    """
+
     args = _parse_args(argv)
     start = parse_state(args.start, args.size) if args.start else ASSIGNMENT_START
     target = parse_state(args.target, args.size) if args.target else ASSIGNMENT_TARGET
@@ -60,6 +107,26 @@ def main(argv: Sequence[str] | None = None) -> int:
 
 
 def _parse_args(argv: Sequence[str] | None) -> argparse.Namespace:
+    """<summary>
+    Configure and parse command-line arguments.
+    </summary>
+
+    <param name="argv">
+    Optional command-line argument sequence. Passing <c>None</c> makes
+    <c>argparse</c> read from <c>sys.argv</c>.
+    </param>
+
+    <returns>
+    An <c>argparse.Namespace</c> containing algorithm, heuristic, size, start,
+    target, and show-path options.
+    </returns>
+
+    <remarks>
+    Invalid choices are handled by <c>argparse</c>, which prints a usage error
+    and exits before the solver runs.
+    </remarks>
+    """
+
     parser = argparse.ArgumentParser(
         description="Solve and compare search algorithms for a sliding block puzzle.",
     )
@@ -98,6 +165,24 @@ def _parse_args(argv: Sequence[str] | None) -> argparse.Namespace:
 
 
 def _print_summary(results: list[SearchResult]) -> None:
+    """<summary>
+    Print the algorithm comparison table.
+    </summary>
+
+    <param name="results">
+    Search results to display. Each result becomes one row in the table.
+    </param>
+
+    <returns>
+    None.
+    </returns>
+
+    <remarks>
+    Column widths are calculated dynamically so the output stays aligned even
+    when algorithm names or numbers change.
+    </remarks>
+    """
+
     headers = (
         "Algorithm",
         "Heuristic",
@@ -134,6 +219,27 @@ def _print_summary(results: list[SearchResult]) -> None:
 
 
 def _print_path(result: SearchResult, size: int) -> None:
+    """<summary>
+    Print the full solution path for one search result.
+    </summary>
+
+    <param name="result">
+    Search result whose path should be printed.
+    </param>
+    <param name="size">
+    Board width and height used to format each state.
+    </param>
+
+    <returns>
+    None.
+    </returns>
+
+    <remarks>
+    If no solution was found, the function prints a short message instead of a
+    path. Otherwise it prints the move list followed by every board state.
+    </remarks>
+    """
+
     print(f"{result.algorithm} path")
     print("-" * len(f"{result.algorithm} path"))
 
