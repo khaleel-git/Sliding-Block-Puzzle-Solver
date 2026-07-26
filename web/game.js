@@ -182,8 +182,8 @@ async function animatePath(data) {
         const currentExpansions = Math.round(data.expansions * stepRatio);
         const currentMemory = Math.round(data.max_nodes_in_memory * stepRatio);
         
-        metricExpansions.innerText = currentExpansions.toLocaleString();
-        metricMemory.innerText = currentMemory.toLocaleString();
+        metricExpansions.innerText = currentExpansions;
+        metricMemory.innerText = currentMemory;
         metricMoves.innerText = i;
         
         // Wait 300ms between moves
