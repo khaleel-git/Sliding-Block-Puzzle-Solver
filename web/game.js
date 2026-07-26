@@ -3,12 +3,14 @@ const TARGET_STATE = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 
 let currentState = [...START_STATE];
 let isAnimating = false;
+let isSimulationPaused = false;
 
 // DOM Elements
 const boardEl = document.getElementById('board');
 const statusEl = document.getElementById('status-message');
 const btnBfs = document.getElementById('btn-bfs');
 const btnAstar = document.getElementById('btn-astar');
+const btnPause = document.getElementById('btn-pause');
 const btnReset = document.getElementById('btn-reset');
 const btnShuffle = document.getElementById('btn-shuffle');
 
@@ -136,14 +138,14 @@ async function solve(algorithm) {
             return;
         }
         
-        // Update metrics
-        metricExpansions.innerText = data.expansions.toLocaleString();
-        metricMemory.innerText = data.max_nodes_in_memory.toLocaleString();
-        metricMoves.innerText = data.moves.length;
-        metricTime.innerText = data.elapsed_seconds.toFixed(4);
+        // Setup initial metrics at 0
+        metricExpansions.innerText = '0';
+        metricMemory.innerText = '0';
+        metricMoves.innerText = '0';
+        metricTime.innerText = data.elapsed_seconds.toFixed(4); // Time is instant
         
-        // Animate path
-        await animatePath(data.path);
+        // Animate path with data
+        await animatePath(data);
         
     } catch (err) {
         setLoading(false);
@@ -153,19 +155,44 @@ async function solve(algorithm) {
     }
 }
 
-async function animatePath(path) {
+async function animatePath(data) {
+    const path = data.path;
     isAnimating = true;
+    isSimulationPaused = false;
+    
+    // Show pause button
+    btnPause.style.display = 'block';
+    btnPause.innerText = 'Pause Simulation';
     statusEl.innerText = 'Animating solution...';
+    
+    const totalSteps = path.length - 1;
     
     // Skip the first state since it's the current one
     for (let i = 1; i < path.length; i++) {
+        // Wait if paused
+        while (isSimulationPaused) {
+            await new Promise(r => setTimeout(r, 100));
+        }
+        
         currentState = path[i];
         renderBoard();
+        
+        // Interpolate metrics for this step
+        const stepRatio = i / totalSteps;
+        const currentExpansions = Math.round(data.expansions * stepRatio);
+        const currentMemory = Math.round(data.max_nodes_in_memory * stepRatio);
+        
+        metricExpansions.innerText = currentExpansions.toLocaleString();
+        metricMemory.innerText = currentMemory.toLocaleString();
+        metricMoves.innerText = i;
+        
         // Wait 300ms between moves
         await new Promise(r => setTimeout(r, 300));
     }
     
     isAnimating = false;
+    isSimulationPaused = false;
+    btnPause.style.display = 'none';
     setLoading(false);
     checkWin();
 }
@@ -214,8 +241,24 @@ function shuffle() {
 btnBfs.addEventListener('click', () => solve('bfs'));
 btnAstar.addEventListener('click', () => solve('astar'));
 
+btnPause.addEventListener('click', () => {
+    if (!isAnimating) return;
+    isSimulationPaused = !isSimulationPaused;
+    if (isSimulationPaused) {
+        btnPause.innerText = 'Resume Simulation';
+        statusEl.innerText = 'Simulation Paused';
+    } else {
+        btnPause.innerText = 'Pause Simulation';
+        statusEl.innerText = 'Animating solution...';
+    }
+});
+
 btnReset.addEventListener('click', () => {
-    if (isAnimating) return;
+    if (isAnimating && !isSimulationPaused) return; // Prevent reset during active animation unless paused
+    isAnimating = false;
+    isSimulationPaused = false;
+    btnPause.style.display = 'none';
+    
     currentState = [...START_STATE];
     renderBoard();
     
