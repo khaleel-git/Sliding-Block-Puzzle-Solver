@@ -162,7 +162,20 @@ python3 --version
 
 Python 3.9 or newer is required.
 
-Run the project:
+### Run the Web UI (Recommended)
+
+To launch the beautiful, interactive game interface:
+
+```bash
+python3 server.py
+```
+
+Then open your browser to `http://localhost:8000`. 
+This uses Python's built-in `http.server` and has zero third-party dependencies.
+
+### Run the Terminal CLI
+
+If you prefer the command-line output:
 
 ```bash
 python3 main.py
