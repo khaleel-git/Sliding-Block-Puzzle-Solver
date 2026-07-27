@@ -183,6 +183,10 @@ python3 main.py bfs
 
 # Run ONLY A* Search
 python3 main.py astar
+
+# To also print the full solution path, add 'show'
+python3 main.py show
+python3 main.py astar show
 ```
 
 ## Folder Structure

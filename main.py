@@ -11,6 +11,21 @@ from sliding_puzzle.board import Puzzle, format_state, is_solvable
 from sliding_puzzle.heuristics import manhattan_distance
 from sliding_puzzle.search import SearchResult, astar_search, breadth_first_search
 
+def _print_path(result: SearchResult, size: int) -> None:
+    print(f"{result.algorithm} path")
+    print("-" * len(f"{result.algorithm} path"))
+
+    if not result.found:
+        print("No solution found.")
+        return
+
+    print(f"Moves ({result.move_count}): {' '.join(result.moves)}")
+    for index, state in enumerate(result.path):
+        print()
+        print(f"Step {index}")
+        print(format_state(state, size))
+
+
 def _print_summary(results: list[SearchResult]) -> None:
     headers = (
         "Algorithm",
@@ -49,10 +64,16 @@ def _print_summary(results: list[SearchResult]) -> None:
 
 def main():
     algorithm = "all"
-    if len(sys.argv) > 1:
-        algorithm = sys.argv[1].lower()
-        if algorithm not in ("bfs", "astar", "all"):
-            print("Usage: python3 main.py [bfs|astar|all]")
+    show_path = False
+    
+    for arg in sys.argv[1:]:
+        arg = arg.lower()
+        if arg in ("bfs", "astar", "all"):
+            algorithm = arg
+        elif arg == "show":
+            show_path = True
+        else:
+            print("Usage: python3 main.py [bfs|astar|all] [show]")
             return 1
 
     start_state = (8, 7, 6, 5, 4, 3, 2, 1, 0)
@@ -85,6 +106,13 @@ def main():
 
     print()
     _print_summary(results)
+    
+    if show_path:
+        print()
+        for result in results:
+            _print_path(result, puzzle.size)
+            print()
+            
     return 0
 
 if __name__ == "__main__":
