@@ -230,101 +230,6 @@ After installation, the command below is also available:
 sliding-puzzle
 ```
 
-## Command-Line Usage
-
-The command-line interface is implemented in
-`src/sliding_puzzle/cli.py`.
-
-### Run Both Algorithms
-
-This is the default:
-
-```bash
-python3 main.py
-```
-
-Equivalent explicit command:
-
-```bash
-python3 main.py --algorithm all
-```
-
-### Run Only BFS
-
-```bash
-python3 main.py --algorithm bfs
-```
-
-### Run Only A*
-
-```bash
-python3 main.py --algorithm astar
-```
-
-### Show The Full Solution Path
-
-```bash
-python3 main.py --show-path
-```
-
-This prints every board state from the start state to the target state.
-
-### Choose An A* Heuristic
-
-```bash
-python3 main.py --algorithm astar --heuristic manhattan
-python3 main.py --algorithm astar --heuristic misplaced
-python3 main.py --algorithm astar --heuristic zero
-```
-
-Available heuristic names:
-
-- `manhattan`: default; sum of tile distances from current positions to target
-  positions.
-- `misplaced`: counts non-blank tiles that are not in their target positions.
-- `zero`: always returns `0`; useful for testing A* behavior.
-
-### Use A Custom Puzzle
-
-```bash
-python3 main.py \
-  --start "8 7 6 5 4 3 2 1 0" \
-  --target "0 1 2 3 4 5 6 7 8"
-```
-
-The input parser accepts spaces, commas, or semicolons:
-
-```bash
-python3 main.py --start "8,7,6,5,4,3,2,1,0"
-python3 main.py --start "8;7;6;5;4;3;2;1;0"
-```
-
-The blank can be written as:
-
-- `0`
-- `_`
-- `blank`
-- `x`
-
-Examples:
-
-```bash
-python3 main.py --start "8 7 6 5 4 3 2 1 _"
-python3 main.py --start "8 7 6 5 4 3 2 1 blank"
-python3 main.py --start "8 7 6 5 4 3 2 1 x"
-```
-
-### All CLI Arguments
-
-| Argument | Values | Default | Meaning |
-| --- | --- | --- | --- |
-| `--algorithm` | `bfs`, `astar`, `all` | `all` | Selects which search algorithm to run. |
-| `--heuristic` | `manhattan`, `misplaced`, `zero` | `manhattan` | Selects the heuristic used by A*. |
-| `--size` | integer | `3` | Board width and height. For this assignment, keep it as `3`. |
-| `--start` | state string | assignment start | Custom start state. |
-| `--target` | state string | assignment target | Custom target state. |
-| `--show-path` | flag | off | Prints every state in the solution path. |
-
 ## Folder Structure
 
 ```text
@@ -339,9 +244,7 @@ python3 main.py --start "8 7 6 5 4 3 2 1 x"
 |-- src/
 |   `-- sliding_puzzle/
 |       |-- __init__.py
-|       |-- __main__.py
 |       |-- board.py
-|       |-- cli.py
 |       |-- heuristics.py
 |       `-- search.py
 `-- web/
@@ -367,9 +270,7 @@ This is the Python package containing the solver.
 | Path | Purpose |
 | --- | --- |
 | `__init__.py` | Defines the package's public imports. |
-| `__main__.py` | Allows running the package with `python3 -m sliding_puzzle`. |
 | `board.py` | Board representation, validation, parsing, formatting, neighbors, solvability. |
-| `cli.py` | Command-line interface and default assignment puzzle. |
 | `heuristics.py` | Heuristic functions used by A*. |
 | `search.py` | BFS, A*, path reconstruction, and metric collection. |
 
