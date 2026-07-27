@@ -174,10 +174,17 @@ This uses Python's built-in `http.server` and has zero third-party dependencies.
 
 ### Run the Terminal CLI
 
-If you prefer the command-line output:
+If you prefer the command-line output, you can run both algorithms at once, or run them individually:
 
 ```bash
+# Run both algorithms (default)
 python3 main.py
+
+# Run ONLY Breadth-First Search
+python3 main.py bfs
+
+# Run ONLY A* Search
+python3 main.py astar
 ```
 
 On Windows PowerShell:

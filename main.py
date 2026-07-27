@@ -48,6 +48,13 @@ def _print_summary(results: list[SearchResult]) -> None:
 
 
 def main():
+    algorithm = "all"
+    if len(sys.argv) > 1:
+        algorithm = sys.argv[1].lower()
+        if algorithm not in ("bfs", "astar", "all"):
+            print("Usage: python3 main.py [bfs|astar|all]")
+            return 1
+
     start_state = (8, 7, 6, 5, 4, 3, 2, 1, 0)
     target_state = (0, 1, 2, 3, 4, 5, 6, 7, 8)
     puzzle = Puzzle(start=start_state, target=target_state, size=3)
@@ -68,13 +75,13 @@ def main():
 
     results = []
     
-    # Run BFS
-    print("Running Breadth-first search...")
-    results.append(breadth_first_search(puzzle))
+    if algorithm in ("bfs", "all"):
+        print("Running Breadth-first search...")
+        results.append(breadth_first_search(puzzle))
     
-    # Run A*
-    print("Running A* search...")
-    results.append(astar_search(puzzle, manhattan_distance, "Manhattan distance"))
+    if algorithm in ("astar", "all"):
+        print("Running A* search...")
+        results.append(astar_search(puzzle, manhattan_distance, "Manhattan distance"))
 
     print()
     _print_summary(results)
