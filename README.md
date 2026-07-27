@@ -26,7 +26,6 @@ Python standard-library data structures.
 - [Detailed File And Function Reference](#detailed-file-and-function-reference)
 - [How The Algorithms Work](#how-the-algorithms-work)
 - [Metrics Explained](#metrics-explained)
-- [Tests](#tests)
 - [Assignment Compliance](#assignment-compliance)
 - [Troubleshooting](#troubleshooting)
 - [Presentation Notes](#presentation-notes)
@@ -193,7 +192,7 @@ The project has no third-party runtime dependencies.
 
 The project can be run directly through `main.py`. Installing it is optional.
 Installation is useful if you want to run the package command
-`sliding-puzzle` or run tests without setting `PYTHONPATH`.
+`sliding-puzzle`.
 
 Create a virtual environment:
 
@@ -345,9 +344,6 @@ python3 main.py --start "8 7 6 5 4 3 2 1 x"
 |       |-- cli.py
 |       |-- heuristics.py
 |       `-- search.py
-|-- tests/
-|   |-- test_board.py
-|   `-- test_search.py
 `-- web/
     |-- game.js
     |-- index.html
@@ -376,15 +372,6 @@ This is the Python package containing the solver.
 | `cli.py` | Command-line interface and default assignment puzzle. |
 | `heuristics.py` | Heuristic functions used by A*. |
 | `search.py` | BFS, A*, path reconstruction, and metric collection. |
-
-### `tests/`
-
-The tests use Python's built-in `unittest` framework.
-
-| Path | Purpose |
-| --- | --- |
-| `tests/test_board.py` | Tests state parsing, neighbor generation, solvability, and formatting. |
-| `tests/test_search.py` | Tests heuristics, BFS, A*, solution length, and unsolvable handling. |
 
 ### `presentation/`
 
@@ -1686,47 +1673,6 @@ Conclusion:
 - BFS expands many more states because it has no information about the target.
 - A* expands far fewer states because Manhattan distance gives useful guidance.
 
-## Tests
-
-Run tests after installing the package:
-
-```bash
-python3 -m unittest discover -s tests
-```
-
-Run tests without installing the package:
-
-```bash
-PYTHONPATH=src python3 -m unittest discover -s tests
-```
-
-Windows PowerShell without installing:
-
-```powershell
-$env:PYTHONPATH = "src"
-py -3 -m unittest discover -s tests
-```
-
-Expected result:
-
-```text
-Ran 9 tests
-
-OK
-```
-
-The test suite checks:
-
-- blank parsing aliases
-- neighbor generation
-- assignment puzzle solvability
-- board formatting
-- heuristic value at target
-- BFS solving the assignment puzzle
-- A* matching BFS solution length
-- A* expanding fewer nodes than BFS
-- unsolvable puzzle early exit
-
 ## Assignment Compliance
 
 | Requirement | Where it is satisfied |
@@ -1742,22 +1688,6 @@ The test suite checks:
 | Avoid search-algorithm libraries | BFS and A* are implemented manually using `deque` and `heapq` |
 
 ## Troubleshooting
-
-### `ModuleNotFoundError: No module named 'sliding_puzzle'`
-
-This can happen when running tests before installing the package.
-
-Fix option 1: install the project:
-
-```bash
-python3 -m pip install -e .
-```
-
-Fix option 2: set `PYTHONPATH` for the test command:
-
-```bash
-PYTHONPATH=src python3 -m unittest discover -s tests
-```
 
 ### PowerShell Blocks Virtual Environment Activation
 
